@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 // tslint:disable-next-line:import-blacklist
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 
 @Component({
   selector: 'app-rxjs',
   templateUrl: './rxjs.component.html',
   styles: []
 })
-export class RxjsComponent implements OnInit {
+export class RxjsComponent implements OnInit, OnDestroy {
+
+  subscripcion: Subscription;
 
   constructor() {
 
-    this.regresaObservable().retry(2)
+    this.subscripcion = this.regresaObservable()
     .subscribe(
       num   =>  console.log('Subs', num),
       error =>  console.error( 'Error en el observable', error ),
@@ -20,6 +22,10 @@ export class RxjsComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    this.subscripcion.unsubscribe();
   }
 
   regresaObservable(): Observable<number> {
